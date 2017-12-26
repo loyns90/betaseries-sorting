@@ -1,0 +1,33 @@
+{
+  "name": "rtransat/oauth2-betaseries",
+  "description": "Betaseries OAuth 2.0 Client Provider for The PHP League OAuth2-Client",
+  "homepage": "https://github.com/florentsorel/oauth2-betaseries",
+  "keywords": ["oauth", "oauth2", "client", "authorization", "authorisation", "betaseries"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Florent Sorel",
+      "email": "florent.sorel@gmail.com",
+      "homepage": "https://github.com/florentsorel"
+    }
+  ],
+  "require": {
+    "php": ">=5.5.0",
+    "league/oauth2-client": "~1.3"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.0",
+    "mockery/mockery": "~0.9",
+    "squizlabs/php_codesniffer": "~2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Rtransat\\OAuth2\\Client\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Rtransat\\OAuth2\\Client\\Test\\": "test/src/"
+    }
+  }
+}
