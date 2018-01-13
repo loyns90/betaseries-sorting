@@ -7,7 +7,8 @@
 # *****************
 # Liste des imports
 # *****************
-import json, requests, sqlite3, string
+import json, os.path, requests, sqlite3, string
+from pathlib import Path
 
 # Imports non utilisés pour le moment
 #import pandas as pd
@@ -26,10 +27,23 @@ getSeries = api + "shows/member"
 # *********************
 # Parametres BetaSeries
 # *********************
-client_id = {"client_id":"3f440d5441a9"}
-login = {"login":"loyn_s"}
-myId = {"id": 11761}
-
+pathname = "~/.bs-sorting/"
+pathnameBrowse = "\~/.bs-sorting/"
+filename = "userBSParams.json"
+my_file = Path(pathnameBrowse + filename)
+print(os.path.exists(pathname + filename))
+if os.path.isfile(pathnameBrowse + filename) == False:
+    os.mkdir(pathname)
+    usersBSParams = {}
+    usersBSParams['client_id'] = '3f440d5441a9'
+    usersBSParams['login'] = 'loyn_s'
+    usersBSParams['id'] = '11761'
+    print(json.dumps(usersBSParams))
+    with open(pathnameBrowse + filename, "w") as f:
+        json.dumps(usersBSParams, f)
+with open(pathnameBrowse + filename, 'r') as f:
+    usersBSParams = json.load(f)
+print(usersBSParams)
 # **************************************************
 
 # *******
