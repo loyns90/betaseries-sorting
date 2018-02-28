@@ -7,7 +7,7 @@
 # *****************
 # Liste des imports
 # *****************
-import json, os.path, requests, sqlite3, string
+import getpass, json, os.path, requests, sqlite3, string
 from pathlib import Path
 
 # Imports non utilisés pour le moment
@@ -27,22 +27,30 @@ getSeries = api + "shows/member"
 # *********************
 # Parametres BetaSeries
 # *********************
-pathname = "~/.bs-sorting/"
-pathnameBrowse = "\~/.bs-sorting/"
+username = getpass.getuser()
+pathname = "/home/" + username + "/.bs-sorting/"
 filename = "userBSParams.json"
-my_file = Path(pathnameBrowse + filename)
-print(os.path.exists(pathname + filename))
-if os.path.isfile(pathnameBrowse + filename) == False:
+path_filename = pathname + filename
+my_file = Path(pathname + filename)
+#if os.path.isfile(my_file) == False:
+if my_file.is_file() == False:
     os.mkdir(pathname)
-    usersBSParams = {}
-    usersBSParams['client_id'] = '3f440d5441a9'
-    usersBSParams['login'] = 'loyn_s'
-    usersBSParams['id'] = '11761'
-    print(json.dumps(usersBSParams))
-    with open(pathnameBrowse + filename, "w") as f:
-        json.dumps(usersBSParams, f)
-with open(pathnameBrowse + filename, 'r') as f:
+    usersBSParams = {
+        'client_id' : '3f440d5441a9',
+        'login' : 'loyn_s',
+        'id' : '11761'
+    }
+#    print(json.dumps(usersBSParams))
+    with open(path_filename, "w") as f:
+        json.dump(usersBSParams, f)
+with open(path_filename, "r") as f:
     usersBSParams = json.load(f)
+
+# Initialisation
+client_id = {"client_id":usersBSParams['client_id']}
+myId = {"id":usersBSParams['id']}
+login = {"login":usersBSParams['login']}
+
 print(usersBSParams)
 # **************************************************
 
