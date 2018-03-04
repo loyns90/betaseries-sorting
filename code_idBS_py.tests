@@ -1,0 +1,27 @@
+username = getpass.getuser()
+pathname = "/home/" + username + "/.bs-sorting/"
+filename = "userBSParams.json"
+path_filename = pathname + filename
+my_file = Path(pathname + filename)
+#if os.path.isfile(my_file) == False:
+if my_file.is_file() == False:
+    os.mkdir(pathname)
+    usersBSParams = {
+        'client_id' : '3f440d5441a9',
+        'login' : 'loyn_s',
+        'id' : '11761'
+    }
+#    print(json.dumps(usersBSParams))
+    with open(path_filename, "w") as f:
+        json.dump(usersBSParams, f)
+with open(path_filename, "r") as f:
+    usersBSParams = json.load(f)
+
+# Initialisation
+client_id = {"client_id":usersBSParams['client_id']}
+myId = {"id":usersBSParams['id']}
+userId = {"userId":usersBSParams['id']}
+login = {"login":usersBSParams['login']}
+
+# print(usersBSParams)
+
