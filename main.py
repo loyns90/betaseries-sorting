@@ -10,7 +10,8 @@
 import getpass, json, os.path, requests, sqlite3, string
 #from bs4 import BeautifulSoup
 from pathlib import Path
-import functionsBS as fBS
+import bsFunctions as bsf
+import eztvFunctions as eztvf
 import functions as fcts
 import classes as clss
 
@@ -42,7 +43,7 @@ eztvAPI = "https://eztv.ag/api/get-torrents?imdb_id="
 # Requêtes à l'API BetaSeries
 # ***************************
 
-getEpsToSeeListById= fBS.reqBS(getEpsToSeeList, False)
+getEpsToSeeListById= bsf.reqBS(getEpsToSeeList, False)
 
 # ****************************************************
 
