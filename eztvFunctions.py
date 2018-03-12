@@ -1,10 +1,7 @@
 #!/usr/bin/python3
 
 def tv_show(self, name):
-        """
-            Fetches a show mapping $name returns a $self instance.
-            Might raise a TVShowNotFound exception
-        """
+        
         # all strings are in lowercase
         name = name.lower()
         data = {

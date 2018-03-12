@@ -10,7 +10,7 @@
 import getpass, json, os.path, requests, sqlite3, string
 #from bs4 import BeautifulSoup
 from pathlib import Path
-import functionsBS as fBS
+import bsFunctions as bsF
 
 # Imports non utilisés pour le moment
 # import pandas as pd
