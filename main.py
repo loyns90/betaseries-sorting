@@ -27,108 +27,72 @@ api = "https://api.betaseries.com/"
 searchMember = api + "members/search"
 getSeries = api + "shows/member"
 getEpsToSeeList = api + "episodes/list"
-
+getShowByTitleSearch = api + "shows/search?title="
+getEpisodesByShow = api + "episodes/list?showsLimit=1&showId="
+apiversion= "&v=3.0"
 # *************************************************
-
-# *************
-# Methodes EZTV
-# *************
-
-eztvSearch = "https://eztv.ag/search/"
-eztvAPI = "https://eztv.ag/api/get-torrents?imdb_id="
-
-# **************************************************
-
-# **************
-# Methodes RarBG
-# **************
-
-rarbgSearch = "https://rarbgproxy.org/torrents.php?search="
-rarbgParams = "&order=size&by=ASC"
-
-# **************************************************
-
-# ************
-# Methodes KAT
-# ************
-
-katSearch = "https://katcr.co/katsearch/page/1/"
-
-# **************************************************
 
 # ***************************
 # Requêtes à l'API BetaSeries
 # ***************************
 
-getEpsToSeeListById= bsf.reqBS(getEpsToSeeList, False)
+#getEpsToSeeListById= bsf.reqBS(getEpsToSeeList, False)
+#getSeriesById= bsf.reqBS(getSeries, False)
+#getShowByTitleSearchRequest = bsf.reqBS(getShowByTitleSearch, False)
 
+#print(getShowByTitleSearchRequest)
+#print(getShowByTitleSearchRequest.json())
 # ****************************************************
 
-#myEpsToSee = list()
-#for show in getEpsToSeeListById.json()["shows"]:
-#    for ep in show["unseen"]:
-#        print(ep["show"]["title"])
-#        print(ep["code"])
-    #myEpsToSee.append(show["title"])
-epiToSearch="vikings s05e10"
-epStrMin = epiToSearch.replace(' ','-')
-epStrPl = epiToSearch.replace(' ','+')
-epStrPt = epiToSearch.replace(' ','.')
-getEztvLinks = os.popen("curl " + eztvSearch + epStrMin).read()
+#mySeries = list()
+#for serie in getShowByTitleSearchRequest.json()["shows"]:
+#    #mySeries.append(serie["title"])
+#    if (serie["title"] == "Suits"):
+#        print(serie["id"])
 
-# Validé :
-# ********
-# getKatLinks = os.popen("curl " + katSearch + epStrMin + " | grep magnet").read()
-# getEztvLinks = os.popen("curl " + eztvSearch + epStrMin).read()
-# ********
+import os
+import re
 
-# À valider :
-# ***********
-# getRarBGLinks = os.popen("curl " + rarbgSearch  + epStrPl).read()
-# ***********
+path = '/share/downloads/'
 
-soup = BeautifulSoup(getEztvLinks, "html.parser")
-balises_links = soup.find_all('a')
-balises_tds = soup.find_all('td')
-links = []
-sizes = []
-links_list = []
+files = []
+# r=root, d=directories, f = files
+for r, d, f in os.walk(path):
+    for file in f:
+        if '.mkv' in file:
+            files.append(file)
 
-# Traitement Kat
-# **************
-#for td in balises_tds:
-#  if 'Size' in str(td):
-#    sizes.append(str(td.string))
-#for link in balises_links:
-#  if 'magnet' in link.get('href'):
-#    links.append(link.get('href'))
-#for i in range(len(links)):
-#  entry = {'magnet': links[i], 'size': sizes[i]}
-#  links_list.append(entry)
-
-# Traitement RarBG
-# ****************
-#for link in balises_links:
-#  if 'torrent' in link.get('href'):
-#    links.append(link.get('href'))
-#    print(link.get('href'))
-#for i in range(len(links)):
-#  entry = {'magnet': links[i], 'size': sizes[i]}
-#  links_list.append(entry)
-
-# Traitement EZTV
-# **************
-for td in balises_tds:
-  if 'MB' in str(td.string) or 'GB' in str(td.string):
-    sizes.append(str(td.string))
-for link in balises_links:
-  if 'magnet' in link.get('href') and epStrPt.lower() in link.get('href').lower():
-    links.append(link.get('href'))
-for i in range(len(links)):
-  entry = {'magnet': links[i], 'size': sizes[i]}
-  links_list.append(entry)
-
-
-for objLink in links_list:
-  print(objLink['magnet'] + " - " + objLink['size'])
-
+for f in files:
+    shownameurl = ""
+    showname = ""
+    showseason = ""
+    showep = ""
+    show = f.split(".", -1)
+    print(f)
+    debut = True
+    for t in show:
+         if re.match("S[0-9]+E[0-9]+",t) is None:
+             if debut:
+                 shownameurl = shownameurl + t
+                 showname = showname + t
+                 debut = False
+             else:
+                 shownameurl = shownameurl + "%20" + t
+                 showname = showname + " " + t
+         else:
+             showseason = t.split("E",1)[0]
+             showseason = showseason.split("S",1)[1]
+             showep = t.split("E",2)[1]
+             fin = True
+             break
+    print(showname,"- Saison ",showseason," - Episode ",showep)
+    getShowByTitleSearchRequest = bsf.reqBS(getShowByTitleSearch + shownameurl, False)
+    #mySeries = list()
+    for serie in getShowByTitleSearchRequest.json()["shows"]:
+    #mySeries.append(serie["title"])
+        if (serie["title"] == showname):
+            showid = str(serie["id"])
+            print(showid)
+            getEpisodesByShowList = bsf.reqBS(getEpisodesByShow + showid + apiversion, False)
+            for ep in getEpisodesByShowList.json()["shows"][0]["unseen"]:
+                print(ep["season"],ep["episode"],ep["title"])
